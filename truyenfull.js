@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  try to take over the world!
 // @author       You
-// @match        https://metruyenchu.com/truyen/*
+// @match        https://truyenfull.vn/*
 // @require  http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require http://code.jquery.com/jquery-3.4.1.min.js
 // @require         https://unpkg.com/jszip@3.1.5/dist/jszip.min.js
@@ -15,15 +15,15 @@
 // ==/UserScript==
 
 //Init Xpath
-var xpath_book_name = '//*[@id="app"]/main//h1/a';
-var xpath_book_author = '//*[@id="app"]/main/div/div[1]/div/div/div/div[2]/ul[1]/li[1]/a';
-var xpath_book_status = '//*[@id="app"]/main/div/div[1]/div/div/div/div[2]/ul[1]/li[2]';
-var xpath_book_dis = '//*[@id="nav-intro"]/div/div[1]/div[1]/div/p';
-var xpath_book_cov = '//*[@id="app"]/main//div/img';
+var xpath_book_name = '//*[@id="truyen"]/div[1]/div[1]/h3';
+var xpath_book_author = '//*[@id="truyen"]/div[1]/div[1]/div[2]/div[2]/div[1]/a';
+var xpath_book_status = '//*[@id="truyen"]/div[1]/div[1]/div[2]/div[2]/div[4]/span';
+var xpath_book_dis = '//*[@id="truyen"]/div[1]/div[1]/div[3]/div[2]';
+var xpath_book_cov = '//*[@id="truyen"]/div[1]/div[1]/div[2]/div[1]/div/img';
 
-var xpath_chap_name = '//*[@id="js-read__body"]/div[2]';
-var xpath_chap_cont = '//*[@id="js-read__content"]';
-var xpath_btn_next = '//*[@id="js-read__body"]/div[1]/a[contains(text(),"Chương sau")]';
+var xpath_chap_name = '//*[@id="chapter-big-container"]/div/div/a';
+var xpath_chap_cont = '//*[@id="chapter-c"]';
+var xpath_btn_next = '//*[@id="next_chap"]';
 
 
 
