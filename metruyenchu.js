@@ -201,14 +201,14 @@ function createEbook(list_chap,book_info){
 		</guide>\n\
 	</package>";
 
-	container_file = "<?xml version='1.0' encoding='UTF-8'?>\n\
+	let container_file = "<?xml version='1.0' encoding='UTF-8'?>\n\
 	<container version='1.0' xmlns='urn:oasis:names:tc:opendocument:xmlns:container'>\n\
 	<rootfiles>\n\
 	<rootfile full-path='content.opf' media-type='application/oebps-package+xml'/>\n\
 	</rootfiles>\n\
 	</container>";
 
-	css_file = ".header {\n\
+	let css_file = ".header {\n\
 		font-size: 100%;\n\
 		font-weight: bold;\n\
 		margin: 0 0 5px;\n\
