@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         MeTruyenChuCreateEbook
+// @name         TruyenFullCreateEbook
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  try to take over the world!
@@ -285,7 +285,7 @@ function createEbook(list_chap,book_info){
 
 	let zip = new JSZip();
 	let text = zip.folder("text");
-	for (i =0;i<list_chap_html.length;i++){
+	for (let i =0;i<list_chap_html.length;i++){
 		text.file(list_chap_html[i]["file_name"],list_chap_html[i]["text"])
 	}
 	let container = zip.folder("META-INF")
