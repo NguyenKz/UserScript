@@ -293,7 +293,7 @@ function createEbook(list_chap,book_info){
 	zip.file("content.opf",content_file);
 	zip.file("toc.ncx",toc_file);
 	zip.file("stylesheet.css",css_file);
-    zip.file("cover.jpg", book_info["book_cov"], {base64: true});
+    // zip.file("cover.jpg", book_info["book_cov"], {base64: true});
 	zip.generateAsync({type:"blob"})
 	.then(function(content) {
 		// see FileSaver.js
