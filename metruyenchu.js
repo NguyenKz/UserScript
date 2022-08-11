@@ -27,10 +27,15 @@ var xpath_btn_next = '//*[@id="js-read__body"]/div[1]/a[contains(text(),"Chươn
 
 
 
+add_button(_x("//body")[0]);
 
 
 $(window).bind("load",function() {
- 
+	if (GM_getValue("is_on",false)==false){
+		return;
+	}
+	
+
 	try{
 		let book_name = _x(xpath_book_name)[0].innerText;
 		let book_author = _x(xpath_book_author)[0].innerText;
@@ -42,13 +47,10 @@ $(window).bind("load",function() {
 			"book_author":book_author,
 			"book_status":book_status,
 			"book_dis":book_dis,
-			"book_cov":book_cov
+			"book_cov":book_cov,
+			"book_url":document.location.href
 		}
-		add_button(_x(xpath_book_name)[0].parentElement.parentElement)
-		if (GM_getValue("is_on",false)==false){
-			return;
-		}
-
+		GM_setValue("pre_url",document.location.href)
 		GM_setValue("book_info",book_info);
 		GM_setValue("chaps",[]);
 		document.location.href = document.location.href +"/chuong-1";
@@ -63,10 +65,7 @@ $(window).bind("load",function() {
 		}else{
 
 			let chap_name = _x(xpath_chap_name)[0].innerText.replaceAll("<","_").replaceAll(">","_").replaceAll("\\","_").replaceAll("/","_");
-			add_button(_x(xpath_chap_name)[0].parentElement.parentElement)
-			if (GM_getValue("is_on",false)==false){
-				return;
-			}
+		
 			
 			let chap_cont = _x(xpath_chap_cont)[0].innerHTML;
 			chap_cont = chap_cont.replaceAll("<br>","__n__").replaceAll("<\br>","__n__");
@@ -77,14 +76,21 @@ $(window).bind("load",function() {
 				"chap_name":chap_name,
 				"chap_cont":chap_cont,
 				"chap_url":document.location.href,
-				"pre_url":GM_setValue("pre_url",null)
+				"pre_url":GM_getValue("pre_url",null)
 			};
-
+			let is_dup = false;
 			let list_chap = GM_getValue("chaps",[]);
-			list_chap.push(chap_info);
-			GM_setValue("chaps",list_chap);
-			GM_setValue("pre_url",document.location.href);
+			for (let index=0;index<list_chap.length;index++){
+				if (list_chap[index]["chap_url"]==document.location.href){
+					is_dup = true;
+				}
+			}
+			if (is_dup==false){
+				list_chap.push(chap_info);
+				GM_setValue("chaps",list_chap);
+			}
 			
+			GM_setValue("pre_url",document.location.href);
 			chap_next[0].click();
 		}
 	}
@@ -92,6 +98,31 @@ $(window).bind("load",function() {
 
 
 
+function add_button(element){
+
+	let is_on = GM_getValue("is_on",false)
+	let button = document.createElement("button");
+	if (is_on){
+		button.innerHTML = "<p>Stop</p>";
+	}else{
+		button.innerHTML = "<p>Start</p>";
+	}
+	button.style.color = "red";
+	button.addEventListener ("click", function() {
+		let is_on = GM_getValue("is_on",false);
+		GM_setValue("is_on",!is_on);
+		if (is_on){
+			button.innerHTML = "<p>Start</p>";
+		}else{
+			button.innerHTML = "<p>Stop</p>";
+			document.location.href = document.location.href
+		}
+
+
+	});
+	element.insertBefore(button, element.firstChild);
+
+}
 
 
 function _x(path){
@@ -104,7 +135,35 @@ function _x(path){
    }
 
 function createEbook(list_chap,book_info){
-	let list_chap_temp = []
+	let list_chap_temp = [];
+	book_url = GM_getValue("book_url",null);
+	if (book_url ==null){
+		return;
+	}
+	current_chap_url = null;
+	for(let index = 0;index<list_chap.length;index++){
+		if (list_chap[index]["pre_url"]==book_url){
+			current_chap_url = list_chap[index]["chap_url"]
+			list_chap_temp.push(list_chap[index])
+			break;
+		}
+	}
+	if (current_chap_url ==null){
+		return;
+	}
+	let is_done = false;
+	while (is_done==false){
+		is_done = true;
+		for(let index = 0;index<list_chap.length;index++){
+			if (list_chap[index]["pre_url"]==current_chap_url){
+				current_chap_url = list_chap[index]["chap_url"];
+				list_chap_temp.push(list_chap[index]);
+				is_done = false;
+				break;
+			}
+		}
+	}
+
 	for(let i =0;i<list_chap.length-1;i++){
 		let insert = true;
 		for(let j =0;i<list_chap_temp.length;j++){
