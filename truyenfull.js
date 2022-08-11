@@ -25,10 +25,6 @@ var xpath_chap_name = '//*[@id="chapter-big-container"]/div/div/a';
 var xpath_chap_cont = '//*[@id="chapter-c"]';
 var xpath_btn_next = '//*[@id="next_chap"]';
 
-
-
-
-
 $(window).bind("load",function() {
  
 	try{
@@ -44,6 +40,11 @@ $(window).bind("load",function() {
 			"book_dis":book_dis,
 			"book_cov":book_cov
 		}
+		add_button(_x(xpath_book_name)[0].parentElement.parentElement)
+		if (GM_getValue("is_on",false)==false){
+			return;
+		}
+
 		GM_setValue("book_info",book_info);
 		GM_setValue("chaps",[]);
 		document.location.href = document.location.href +"/chuong-1";
@@ -58,11 +59,16 @@ $(window).bind("load",function() {
 		}else{
 
 			let chap_name = _x(xpath_chap_name)[0].innerText.replaceAll("<","_").replaceAll(">","_").replaceAll("\\","_").replaceAll("/","_");
+			add_button(_x(xpath_chap_name)[0].parentElement.parentElement)
+			if (GM_getValue("is_on",false)==false){
+				return;
+			}
+			
 			let chap_cont = _x(xpath_chap_cont)[0].innerHTML;
 			chap_cont = chap_cont.replaceAll("<br>","__n__").replaceAll("<\br>","__n__");
 			chap_cont = _x(xpath_chap_cont)[0].innerText.replaceAll("__n__","\n<br>").replaceAll("\n","\n<br>");
 			_x(xpath_chap_cont)[0].innerHTML = chap_cont;
-
+			
 			let chap_info = {
 				"chap_name":chap_name,
 				"chap_cont":chap_cont,
@@ -74,11 +80,35 @@ $(window).bind("load",function() {
 			list_chap.push(chap_info);
 			GM_setValue("chaps",list_chap);
 			GM_setValue("pre_url",document.location.href);
+			
 			chap_next[0].click();
 		}
 	}
 })();
 
+
+function add_button(element){
+	let is_on = GM_getValue("is_on",false)
+	let button = document.createElement("button");
+	if (is_on){
+		button.innerHTML = "<p>Stop</p>";
+	}else{
+		button.innerHTML = "<p>Start</p>";
+	}
+	button.style.color = "red";
+	button.addEventListener ("click", function() {
+		let is_on = GM_getValue("is_on",false);
+		GM_setValue("is_on",!is_on);
+		if (is_on){
+			button.innerHTML = "<p>Start</p>";
+		}else{
+			button.innerHTML = "<p>Stop</p>";
+		}
+
+
+	});
+	element.appendChild(button);
+}
 
 
 
