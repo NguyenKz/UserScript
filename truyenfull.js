@@ -26,7 +26,6 @@ var xpath_chap_cont = '//*[@id="chapter-c"]';
 var xpath_btn_next = '//*[@id="next_chap"]';
 
 
-
 add_button(_x("//body")[0]);
 
 
@@ -80,6 +79,9 @@ $(window).bind("load",function() {
 			};
 			let is_dup = false;
 			let list_chap = GM_getValue("chaps",[]);
+			let book_info = GM_getValue("book_info",null);
+			list_chap = get_list_chap(list_chap,book_info)
+
 			for (let index=0;index<list_chap.length;index++){
 				if (list_chap[index]["chap_url"]==document.location.href){
 					is_dup = true;
@@ -95,6 +97,8 @@ $(window).bind("load",function() {
 		}
 	}
 })();
+
+
 
 function add_button(element){
 
@@ -118,11 +122,44 @@ function add_button(element){
 
 
 	});
+	
+	let book_info = GM_getValue("book_info",null);
+	if (book_info !=null){
+		element.insertBefore(button, element.firstChild);
+		let chaps = GM_getValue("chaps",[]);
+		chaps = get_list_chap(chaps,book_info);
+
+		button = document.createElement("button");
+		button.innerHTML = "<p>Resume: "+book_info["book_name"]+" -> "+chaps.length+"</p>";
+		button.style.color = "red";
+		button.addEventListener ("click", function() {
+			let url = null;
+			if (chaps.length>0){
+				url = chaps[chaps.length-1]["chap_url"];
+			}else{
+				url = book_info["book_url"];
+			}
+			GM_setValue("is_on",true);
+			document.location.href = url;
+		});
+		element.insertBefore(button, element.firstChild);
+	}
 	element.insertBefore(button, element.firstChild);
 
+
+	let chaps = GM_getValue("chaps",[]);
+	book_info = GM_getValue("book_info",null);
+	chaps = get_list_chap(chaps,book_info);
+
+	button = document.createElement("button");
+	button.innerHTML = "<p>Create Ebook</p>";
+	button.style.color = "red";
+	button.addEventListener ("click", function() {
+		GM_setValue("is_on",false);
+		createEbook(chaps,book_info);
+	});
+	element.insertBefore(button, element.firstChild);
 }
-
-
 
 
 function _x(path){
@@ -134,50 +171,72 @@ function _x(path){
 	  return temp;
    }
 
-function createEbook(list_chap,book_info){
-	let list_chap_temp = [];
-	book_url = GM_getValue("book_url",null);
-	if (book_url ==null){
-		return;
-	}
-	current_chap_url = null;
-	for(let index = 0;index<list_chap.length;index++){
-		if (list_chap[index]["pre_url"]==book_url){
-			current_chap_url = list_chap[index]["chap_url"]
-			list_chap_temp.push(list_chap[index])
-			break;
-		}
-	}
-	if (current_chap_url ==null){
-		return;
-	}
-	let is_done = false;
-	while (is_done==false){
-		is_done = true;
-		for(let index = 0;index<list_chap.length;index++){
-			if (list_chap[index]["pre_url"]==current_chap_url){
-				current_chap_url = list_chap[index]["chap_url"];
-				list_chap_temp.push(list_chap[index]);
-				is_done = false;
-				break;
-			}
-		}
-	}
 
-	for(let i =0;i<list_chap.length-1;i++){
-		let insert = true;
-		for(let j =0;i<list_chap_temp.length;j++){
-			if (list_chap[i]["chap_url"]==list_chap[j]["chap_url"]){
-				insert = false;
+
+
+function get_chap_next(url_chap_current,chaps)
+{
+	
+	for (let index = 0;index<chaps.length;index++){
+		if (chaps[index]["pre_url"]==url_chap_current){
+			return chaps[index];
+		}
+	}
+	return null;
+}
+
+function get_list_chap(list_chap,book_info){
+	let list_chap_temp = [];
+	if (book_info ==null){
+		return [];
+	}
+	let current_url = book_info["book_url"];
+	while (get_chap_next(current_url,list_chap)!=null){
+		let chap  = get_chap_next(current_url,list_chap);
+		current_url = chap["chap_url"];
+		
+		let is_insert = true;
+		for (let index = 0;index<list_chap_temp.length;index++){
+			if (list_chap_temp[index]["chap_url"]==current_url){
+				is_insert = false;
 				break;
 			}
 		}
-		if (insert){
-			list_chap_temp.push(list_chap[i]);
+		
+		if (is_insert){
+			
+			list_chap_temp.push(chap)
 		}
+		const index = list_chap.indexOf(chap);
+		if (index > -1) { 
+			list_chap.splice(index, 1);
+		}
+		
 	}
-	list_chap = list_chap_temp;
-	// Create Toc File
+	return list_chap_temp;
+}
+// chaps = [
+// 	{"chap_url":2,"pre_url":1},
+// 	{"chap_url":3,"pre_url":2},
+// 	{"chap_url":4,"pre_url":3},
+// 	{"chap_url":4,"pre_url":4},
+// 	{"chap_url":4,"pre_url":4},
+// 	{"chap_url":4,"pre_url":4},
+// 	{"chap_url":5,"pre_url":4},
+// 	{"chap_url":6,"pre_url":5},
+// 	{"chap_url":7,"pre_url":4},
+// ]
+// let book_info = {"book_url":1}
+// console.log(get_list_chap(chaps,book_info))
+
+
+function createEbook(list_chap,book_info){
+
+	if (book_info ==null){
+		return;
+	}
+	list_chap = get_list_chap(list_chap,book_info);
+
 	let toc_body= "";
 	let content_item_1 = "";
 	let content_item_2 = "";
@@ -190,7 +249,7 @@ function createEbook(list_chap,book_info){
 		file_name+=".html"
 		toc_body+="        <navPoint id='c"+i+"' playOrder='"+i+"'>\n\
 				<navLabel>\n\
-					<text>"+list_chap[i]["chap_name"]+"</text>\n\
+					<text>"+"["+i+"]"+list_chap[i]["chap_name"]+"</text>\n\
 				</navLabel>\n\
 				<content src='text/"+file_name+"'/>\n\
 			</navPoint>\n";
@@ -214,7 +273,7 @@ function createEbook(list_chap,book_info){
 	  <div class='author'>\n\
 	   "+book_info["book_author"]+"\
 	  </div>\n\
-	  <h4 class='CHAP_NAME'>"+list_chap[i]["chap_name"]+"</h4>\n\
+	  <h4 class='CHAP_NAME'>"+"["+i+"]"+list_chap[i]["chap_name"]+"</h4>\n\
 	  <div class='CHAP_CONTENT'>\n\
 	  "+list_chap[i]["chap_cont"]+"\n\
 	  </div>\n\
