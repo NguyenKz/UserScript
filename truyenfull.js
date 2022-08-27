@@ -12,6 +12,8 @@
 // @require         https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=userscripts-mirror.org
 // @connect         self
+// @supportURL      https://github.com/lelinhtinh/Userscript/issues
+// @run-at          document-idle
 // @grant   GM_getValue
 // @grant   GM_setValue
 // ==/UserScript==
