@@ -20,7 +20,7 @@
 
 
 
-$(window).bind("load",function() {
+(function ($, window, document) {
 	'use strict';
 	//Init Xpath
 	var xpath_book_name = '//*[@id="truyen"]/div[1]/div[1]/h3';
