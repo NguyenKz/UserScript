@@ -1,15 +1,18 @@
 // ==UserScript==
 // @name         TruyenFullCreateEbook
-// @namespace    http://tampermonkey.net/
+// @name:vi      TruyenFullCreateEbook
+// @namespace    http://nguyenkz.net/
 // @version      0.1
 // @description  try to take over the world!
-// @author       You
+// @author       NguyenKz
+// @license      MIT; https://baivong.mit-license.org/license.txt
 // @match        https://truyenfull.vn/*
 // @require  http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require http://code.jquery.com/jquery-3.4.1.min.js
 // @require         https://unpkg.com/jszip@3.1.5/dist/jszip.min.js
 // @require         https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=userscripts-mirror.org
+// @connect         self
 // @grant   GM_getValue
 // @grant   GM_setValue
 // ==/UserScript==
