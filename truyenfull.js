@@ -430,7 +430,7 @@
 		});
 	}
 
-})();
+})(jQuery, window, document);
 
 
 
