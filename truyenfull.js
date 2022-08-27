@@ -21,6 +21,7 @@
 
 
 $(window).bind("load",function() {
+	'use strict';
 	//Init Xpath
 	var xpath_book_name = '//*[@id="truyen"]/div[1]/div[1]/h3';
 	var xpath_book_author = '//*[@id="truyen"]/div[1]/div[1]/div[2]/div[2]/div[1]/a';
