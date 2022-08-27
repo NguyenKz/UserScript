@@ -15,11 +15,6 @@
 // @grant   GM_getValue
 // @grant   GM_setValue
 // ==/UserScript==
-
-
-
-
-
 (function ($, window, document) {
 	'use strict';
 	//Init Xpath
