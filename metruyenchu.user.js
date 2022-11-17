@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  try to take over the world!
 // @author       You
-// @match        https://metruyenchu.com/truyen/*
+// @match        https://metruyencv.com/truyen/*
 // @require  http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require http://code.jquery.com/jquery-3.4.1.min.js
 // @require         https://unpkg.com/jszip@3.1.5/dist/jszip.min.js
