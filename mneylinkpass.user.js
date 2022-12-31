@@ -1,13 +1,14 @@
 // ==UserScript==
-// @name         https://mneylinkpass.com/
+// @name         mneylinkpass.com
 // @namespace    http://tampermonkey.net/
 // @version      0.1
 // @description  try to take over the world!
 // @author       You
-// @match      	 *
+// @match        https://mneylinkpass.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=mneylinkpass.com
 // @grant        none
 // ==/UserScript==
+
 
 (function() {
     add_button();
@@ -25,10 +26,10 @@ function add_button(){
 	let button = document.createElement("button");
 	button.innerHTML = "<p>Page source</p>";
 	button.addEventListener ("click", function() {
-		let pattern = /el.html\(([\w]+)\)/i;
+		let pattern = /el.html\('(.+)'\)/;
 		let result = pattern.exec(document.body.innerHTML);
 		let source = document.createElement("div");
-		source.innerHTML = "<p>"+result+"</p>"
+		source.innerHTML = "<p>"+result[1]+"</p>"
 		element_parent.insertBefore(source, element_parent.firstChild);
 		console.log(source.innerHTML )
 	});
