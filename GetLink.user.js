@@ -25,8 +25,10 @@ function add_button(){
     let button = document.createElement("button");
     button.innerHTML = "<p>Page source</p>";
     button.addEventListener ("click", function() {
+        let pattern = /el.html\(([\w]+)\)/i;
+        let result = pattern.exec(document.body.innerHTML);
         let source = document.createElement("div");
-        source.innerHTML = "<p>"+(document.body.innerHTML+"").replaceAll("<","").replaceAll("/","").replaceAll(">","").replaceAll("\"","").replaceAll("'","")+"</p>"
+        source.innerHTML = "<p>"+result+"</p>"
         element_parent.insertBefore(source, element_parent.firstChild);
         console.log(source.innerHTML )
     });
