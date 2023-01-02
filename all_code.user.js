@@ -16,7 +16,11 @@
 
 
 function add_button(){
-
+	try{
+		traffic_wait_time = 1;
+	}catch(e){
+	
+	}
 	let element_parent = document.body;
     	let header = document.createElement("div");
 	header.setAttribute("id","nguyen_button")
@@ -26,12 +30,12 @@ function add_button(){
     //>>Lấy MÃ ROBOT
 	let pattern = /<div>Mã của bạn là: ([\w]+)<\/div>/;
 	let result = pattern.exec(document.body.innerHTML);
-    element_parent.innerHTML = "<p>Lấy MÃ ROBOT: "+result[1]+"</p>"
+    	element_parent.innerHTML = "<p>Lấy MÃ ROBOT: "+result[1]+"</p>"
     
     
 	element_parent.insertBefore(button, element_parent.firstChild);
 
-
+	
 
 }
 
