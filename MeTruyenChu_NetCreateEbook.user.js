@@ -33,6 +33,7 @@ add_button(_x("//body")[0]);
 
 
 $(window).bind("load",function() {
+	alert(document.getElementsByTagName("em"))
 	if (GM_getValue("is_on",false)==false){
 		return;
 	}
